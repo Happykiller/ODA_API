@@ -10,7 +10,8 @@ SET time_zone = "+00:00";
 -- Contenu de la table `@dbLog@`.`@prefixeDb@api_tab_menu_categorie`
 -- Réservé 1-9 API
 -- Réservé 10-19 API_RH
--- Réservé 70-79 Projet
+-- Réservé 70-98 Projet
+-- Réservé 98 Liens cachés
 -- Réservé 99 Liens externes
 --
 INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu_categorie` (`id`, `Description`, `ouvert`) VALUES
@@ -19,14 +20,14 @@ INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu_categorie` (`id`, `Description`, 
 (3, 'Gestion', 0),
 (4, 'Rapports', 0),
 (98, 'Cachés', 0),
-(99, 'Liens externs', 0);
+(99, 'Liens externes', 0);
 
 -- --------------------------------------------------------
 --
 -- Contenu de la table `@dbLog@`.`@prefixeDb@api_tab_menu`
 -- Réservé 1-19 API
 -- Réservé 20-29 API_RH
--- Réservé : 70-89 Projet
+-- Réservé : 70-99 Projet
 -- Réservé : 100+ pour le projet
 --
 INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu` (`id`, `Description`, `Description_courte`, `id_categorie`, `Lien`) VALUES
