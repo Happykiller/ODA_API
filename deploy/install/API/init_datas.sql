@@ -27,8 +27,7 @@ INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu_categorie` (`id`, `Description`, 
 -- Contenu de la table `@dbLog@`.`@prefixeDb@api_tab_menu`
 -- Réservé 1-19 API
 -- Réservé 20-29 API_RH
--- Réservé : 70-99 Projet
--- Réservé : 100+ pour le projet
+-- Réservé : 70+ Projet
 --
 INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu` (`id`, `Description`, `Description_courte`, `id_categorie`, `Lien`) VALUES
 (1, 'L''accueil', 'L''accueil', 1, 'page_home.html'),
