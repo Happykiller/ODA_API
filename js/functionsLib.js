@@ -27,6 +27,26 @@ function WorkerMessage(cmd, parameter) {
 */
 (function() {
     'use strict';
+     
+    //first event before show page
+    //Execute en 2
+    $(document).ready(function() {
+        try {
+            _documentReady = true;
+        } catch (er) {
+            $.functionsLib.log(0, "ERROR(document.ready):" + er.message);
+        }
+    });
+
+    //second event when show page
+    //Execute en 3
+    $(window).load(function() {
+        try {
+            _documentLoad = true;
+        } catch (er) {
+            $.functionsLib.log(0, "ERROR(window.load):" + er.message);
+        }
+    });
 
     var
         /* version */
@@ -62,6 +82,10 @@ function WorkerMessage(cmd, parameter) {
         _dependeciesFeedback = null,
         
         _i8n = null,
+        
+        _documentReady = false,
+        
+        _documentLoad = false,
         
         //-----------------
         //$.functionsMobile
@@ -123,93 +147,12 @@ function WorkerMessage(cmd, parameter) {
      * @desc Hello
      */
     function _init() {
-        $.functionsLib.loadDepends([
-                {"name" : "datas" , ordered : true, "list" : [{ "elt" : "i8n/datas.json", "type" : "json", "target" :  _i8n},{ "elt" : "i8n/datas.js", "type" : "script"}]}
-                , {"name" : "libs" , ordered : false, "list" : [{ "elt" : "i8n/truc1.js", "type" : "script" },{ "elt" : "i8n/truc2.js", "type" : "script" }]}
-            ],_loaded);
-            
-        //-----------------
-        //$.functionsLib
-        //-----------------
         if(typeof customWindowODA != 'undefined'){
             $.functionsLib.currentWindow = customWindowODA;
         }
         
-        //Execute en 1
         _checkMaintenance();
         _checkAuthentification();
-        
-        //first event before show page
-        //Execute en 2
-        $(document).ready(function() {
-            try {
-                //Warning
-                if (!document.querySelector || !document.addEventListener) {
-                    $.functionsLib.notification("Pour profiter d'une expérience optimum, merci d'utiliser un navigateur récent.", $.functionsLib.oda_msg_color.WARNING);
-                }
-
-                //Themitisation
-                var theme = $.functionsLib.getParameter("theme_defaut");
-                
-                if((!$.functionsLib.isInArray($.functionsLib.pageName,_oda_notAuthTest))&&(_userInfo != null)){
-                    var themePerso = $.functionsLib.getter("api_tab_utilisateurs",'{"champ":"theme","type":"PARAM_STR"}','{"champ":"code_user","valeur":"'+_userInfo.code_user+'","type":"PARAM_STR"}');
-
-                    if((typeof themePerso != 'undefined')&&(themePerso != '')&&(themePerso != 'notAvailable')&&(themePerso != null)&&(themePerso != "default")){
-                        $('head').append('<link rel="stylesheet" href="css/themes/'+themePerso+'/jquery.mobile.theme.min.css" />');
-                        $('head').append('<link rel="stylesheet" href="css/themes/'+themePerso+'/jquery.mobile.icons.min.css" />');
-                    }else if((typeof theme != 'undefined')&&(theme != '')){
-                        $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.theme.min.css" />');
-                        $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.icons.min.css" />');
-                    }
-
-                    //Le menu
-                    var html = _getHtmlMenu(_userInfo.profile, $.functionsLib.pageName);
-                    $("#mypanel").append(html).trigger('create');
-
-                    //L'utilisateur en bas de page
-                    var strHml = _userInfo.nom + " " + _userInfo.prenom + " (" + _userInfo.labelle + ")";
-                    $("#id_affichageUser").html(strHml);
-
-                    //L'aide ihm
-                    if(_userInfo.montrer_aide_ihm == "1"){
-                        $.functionsLib.afficheAideIhm(_userInfo.code_user);
-                    }
-                }else{
-                    if((typeof theme != 'undefined')&&(theme != '')){
-                        $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.theme.min.css" />');
-                        $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.icons.min.css" />');
-                    }
-                }
-            } catch (er) {
-                $.functionsLib.log(0, "ERROR(document.ready):" + er.message);
-            }
-        });
-
-        //second event when show page
-        //Execute en 3
-        $(window).load(function() {
-            try {
-                //Ajoute titre page
-                if (( typeof id_page != "undefined" ) && (id_page != 0)) {
-                    var description = $.functionsLib.getter("api_tab_menu",'{"champ":"Description","type":"PARAM_STR"}','{"champ":"id","valeur":"'+id_page+'","type":"PARAM_INT"}');
-
-                    document.title = $.functionsLib.getParameter("nom_site") + " - " + description;
-
-                    $("#id_titre").text(description);
-                }else{
-                    document.title = $.functionsLib.getParameter("nom_site") + " - " + document.title;
-                }
-                
-                if($.functionsLib.pageName == "page_home.html"){
-                    _messagesShow();
-                }
-            } catch (er) {
-                $.functionsLib.log(0, "ERROR(window.load):" + er.message);
-            }
-        });
-        
-        //Onload
-        //Execute en 4
         
         //-----------------
         //$.functionsStorage
@@ -221,13 +164,74 @@ function WorkerMessage(cmd, parameter) {
         //$.functionsMobile
         //-----------------
         document.addEventListener("deviceready", _onDeviceReady, false);
+        
+        $.functionsLib.loadDepends([
+                {"name" : "datas" , ordered : true, "list" : [{ "elt" : "api/json/i8n.json", "type" : "json", "target" :  _i8n}]}
+            ],_loaded);
     };
     
     /**
      * @name _loaded
      */
     function _loaded() {
-        $.functionsLib.ready();
+        //Warning
+        if (!document.querySelector || !document.addEventListener) {
+            $.functionsLib.notification("Pour profiter d'une expérience optimum, merci d'utiliser un navigateur récent.", $.functionsLib.oda_msg_color.WARNING);
+        }
+
+        //Themitisation
+        var theme = $.functionsLib.getParameter("theme_defaut");
+
+        if((!$.functionsLib.isInArray($.functionsLib.pageName,_oda_notAuthTest))&&(_userInfo != null)){
+            var themePerso = $.functionsLib.getter("api_tab_utilisateurs",'{"champ":"theme","type":"PARAM_STR"}','{"champ":"code_user","valeur":"'+_userInfo.code_user+'","type":"PARAM_STR"}');
+
+            if((typeof themePerso != 'undefined')&&(themePerso != '')&&(themePerso != 'notAvailable')&&(themePerso != null)&&(themePerso != "default")){
+                $('head').append('<link rel="stylesheet" href="css/themes/'+themePerso+'/jquery.mobile.theme.min.css" />');
+                $('head').append('<link rel="stylesheet" href="css/themes/'+themePerso+'/jquery.mobile.icons.min.css" />');
+            }else if((typeof theme != 'undefined')&&(theme != '')){
+                $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.theme.min.css" />');
+                $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.icons.min.css" />');
+            }
+
+            //Le menu
+            var html = _getHtmlMenu(_userInfo.profile, $.functionsLib.pageName);
+            $("#mypanel").append(html).trigger('create');
+
+            //L'utilisateur en bas de page
+            var strHml = _userInfo.nom + " " + _userInfo.prenom + " (" + _userInfo.labelle + ")";
+            $("#id_affichageUser").html(strHml);
+
+            //L'aide ihm
+            if(_userInfo.montrer_aide_ihm == "1"){
+                $.functionsLib.afficheAideIhm(_userInfo.code_user);
+            }
+        }else{
+            if((typeof theme != 'undefined')&&(theme != '')){
+                $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.theme.min.css" />');
+                $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.icons.min.css" />');
+            }
+        }
+        
+        //Ajoute titre page
+        if (( typeof id_page != "undefined" ) && (id_page != 0)) {
+            var description = $.functionsLib.getter("api_tab_menu",'{"champ":"Description","type":"PARAM_STR"}','{"champ":"id","valeur":"'+id_page+'","type":"PARAM_INT"}');
+
+            document.title = $.functionsLib.getParameter("nom_site") + " - " + description;
+
+            $("#id_titre").text(description);
+        }else{
+            document.title = $.functionsLib.getParameter("nom_site") + " - " + document.title;
+        }
+
+        if($.functionsLib.pageName == "page_home.html"){
+            _messagesShow();
+        }
+        
+        if(_documentLoad){
+            $.functionsLib.ready();
+        }else{
+            window.addEventListener("load", $.functionsLib.ready, false);
+        }
     };
     
     /**
@@ -1865,7 +1869,7 @@ function WorkerMessage(cmd, parameter) {
                 return retour;
             } catch (er) {
                this.log(0, "ERROR($.functionsLib.loadDepends):" + er.message);
-           }
+            }
         },
         
         /**
