@@ -57,6 +57,12 @@ function WorkerMessage(cmd, parameter) {
         
         _userInfo = null,
         
+        _dependecies = null,
+        
+        _dependeciesFeedback = null,
+        
+        _i8n = null,
+        
         //-----------------
         //$.functionsMobile
         //-----------------
@@ -117,6 +123,11 @@ function WorkerMessage(cmd, parameter) {
      * @desc Hello
      */
     function _init() {
+        $.functionsLib.loadDepends([
+                {"name" : "datas" , ordered : true, "list" : [{ "elt" : "i8n/datas.json", "type" : "json", "target" :  _i8n},{ "elt" : "i8n/datas.js", "type" : "script"}]}
+                , {"name" : "libs" , ordered : false, "list" : [{ "elt" : "i8n/truc1.js", "type" : "script" },{ "elt" : "i8n/truc2.js", "type" : "script" }]}
+            ],_loaded);
+            
         //-----------------
         //$.functionsLib
         //-----------------
@@ -210,6 +221,13 @@ function WorkerMessage(cmd, parameter) {
         //$.functionsMobile
         //-----------------
         document.addEventListener("deviceready", _onDeviceReady, false);
+    };
+    
+    /**
+     * @name _loaded
+     */
+    function _loaded() {
+        $.functionsLib.ready();
     };
     
     /**
@@ -586,6 +604,151 @@ function WorkerMessage(cmd, parameter) {
             var myTimer=setTimeout(function(){_executeRobot();},_frequencyRobot);
         }
     };
+        
+    function _loadDepend(p_elt, p_mode) {
+        try {
+            var retour = true;
+
+            console.log("Loading : "+p_elt.elt);
+            
+            switch(p_elt.type) {
+                case "css":
+                    $('<link/>', {
+                        rel: 'stylesheet',
+                        type: 'text/css',
+                        href: p_elt.elt
+                    }).appendTo('head');
+                    p_elt.status = "done";
+                    console.log( "Sucess for : "+lib );
+                    
+                    if(p_mode == "serie"){
+                        _loadListDependsOrdoned();
+                    }
+                    _allDependsLoaded();
+                    break;
+                case "script":
+                    $.ajax({
+                    url: p_elt.elt,
+                    dataType: "script",
+                    context : {"lib" : p_elt.elt},
+                    success: function( script, textStatus, jqxhr) {
+                        console.log( "Sucess for : "+$(this)[0].lib+" ("+textStatus+")" );
+                        p_elt.status = "done";
+                    
+                        if(p_mode == "serie"){
+                            _loadListDependsOrdoned();
+                        }
+                        _allDependsLoaded();
+                    },
+                    error : function( jqxhr, settings, exception ) {
+                        console.log( "Triggered ajaxError handler for : "+$(this)[0].lib+"." );
+                        p_elt.status = "fail";
+                    
+                        if(p_mode == "serie"){
+                            _loadListDependsOrdoned();
+                        }
+                        _allDependsLoaded();
+                    }
+                });
+                    break;
+                case "json":
+                    $.ajax({
+                    dataType: "json",
+                    url: p_elt.elt,
+                    context : {"lib" : p_elt.elt},
+                    success: function( script, textStatus, jqxhr) {
+                        console.log( "Sucess for : "+$(this)[0].lib+" ("+textStatus+")" );
+                        p_elt.status = "done";
+                        
+                        if(p_mode == "serie"){
+                            _loadListDependsOrdoned();
+                        }
+                        _allDependsLoaded();
+                    },
+                    error : function( jqxhr, settings, exception ) {
+                        console.log( "Triggered ajaxError handler for : "+$(this)[0].lib+"." );
+                        p_elt.status = "fail";
+                        
+                        if(p_mode == "serie"){
+                            _loadListDependsOrdoned();
+                        }
+                        _allDependsLoaded();
+                    }
+                    });
+                    break;
+                default:
+                    console.log( "Type unknown for : "+p_elt.elt+"." );
+            }
+
+            return retour;
+        } catch (er) {
+            $.functionsLib.log(er.message);
+            return null;
+        }
+    }
+    
+    function _loadListDependsOrdoned() {
+        try {
+            var retour = true;
+
+            for (var indice in _dependecies) {
+                if((!$.functionsLib.isUndefined(_dependecies[indice].status)) && (_dependecies[indice].status == "doing")){
+                    var gardian = true;
+                    for (var indiceList in _dependecies[indice].list) {
+                        var elt = _dependecies[indice].list[indiceList];
+                        if(($.functionsLib.isUndefined(elt.status)) || (elt.status == "doing")){
+                            elt.status = "doing";
+                            _loadDepend(elt,"serie");
+                            gardian = false;
+                            break;
+                        }
+                    }
+                    if(gardian){
+                        _dependecies[indice].status = "done";
+                        $.functionsLib.loadDepends();
+                    }
+                }
+            }
+
+            return retour;
+        } catch (er) {
+            $.functionsLib.log(er.message);
+            return null;
+        }
+    }
+    
+    function _allDependsLoaded() {
+        try {
+            var retour = true;
+            
+            if(_dependecies != null){
+                for (var indice in _dependecies) {
+                    if(($.functionsLib.isUndefined(_dependecies[indice].status)) || (_dependecies[indice].status == "doing")){
+                        retour = false;
+                        break;
+                    }else{
+                        for (var indiceList in _dependecies[indice].list) {
+                            var elt = _dependecies[indice].list[indiceList];
+                            if(($.functionsLib.isUndefined(elt.status)) || (elt.status == "doing")){
+                                retour = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if((retour)&&(_dependecies!=null)){
+                _dependeciesFeedback();
+                _dependecies = null;
+            }
+
+            return retour;
+        } catch (er) {
+            $.functionsLib.log(er.message);
+            return null;
+        }
+    }
 
     ////////////////////////// PUBLIC METHODS /////////////////////////
 
@@ -1592,6 +1755,18 @@ function WorkerMessage(cmd, parameter) {
         },
         
         /**
+        * ready
+        */
+        ready : function() {
+            try {
+                return true;
+            } catch (er) {
+                this.log(0, "ERROR($.functionsLib.ready):" + er.message);
+                return null;
+            }
+        },
+        
+        /**
          * @name afficheAideIhm
          * @param {String} p_user
          * @returns {String}
@@ -1652,6 +1827,45 @@ function WorkerMessage(cmd, parameter) {
             } catch (er) {
                 this.log(0, "ERROR($.functionsLib.afficheAideIhm):" + er.message);
             }
+        },
+        
+        /**
+        * @name : loadDepends
+        */
+        loadDepends : function(p_depends, p_functionFeedback){
+            try {
+                if(_dependecies == null){
+                    _dependecies = p_depends;
+                }
+                
+                if(_dependeciesFeedback == null){
+                    _dependeciesFeedback = p_functionFeedback;
+                }
+                
+                var retour = true;
+
+                for (var indice in _dependecies) {
+                    if((this.isUndefined(_dependecies[indice].status)) || (_dependecies[indice].status != "done")){
+                        console.log("Loading list of dependecies : "+_dependecies[indice].name+".");
+                        _dependecies[indice].status = "doing";
+                        if(_dependecies[indice].ordered){
+                            _loadListDependsOrdoned();
+                            retour = false;
+                            break;
+                        }else{
+                            for (var indiceList in _dependecies[indice].list) {
+                                var elt = _dependecies[indice].list[indiceList];
+                                _loadDepend(elt,"paral");
+                            }
+                            _dependecies[indice].status = "done";
+                        }
+                    }
+                }
+
+                return retour;
+            } catch (er) {
+               this.log(0, "ERROR($.functionsLib.loadDepends):" + er.message);
+           }
         },
         
         /**
