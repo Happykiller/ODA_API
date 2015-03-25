@@ -30,6 +30,7 @@ INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu_categorie` (`id`, `Description`, 
 -- Réservé : 70+ Projet
 --
 INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu` (`id`, `Description`, `Description_courte`, `id_categorie`, `Lien`) VALUES
+(0, 'Exemple', 'Exemple', 98, 'page_exemple.html'),
 (1, 'L''accueil', 'L''accueil', 1, 'page_home.html'),
 (2, 'Contact', 'Contact', 1, 'api_page_contact.html'),
 (3, 'FAQ', 'FAQ', 1, 'api_page_faq.html'),
@@ -54,7 +55,7 @@ INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_rangs` (`id`, `labelle`, `indice`) VAL
 -- Contenu de la table `@dbLog@`.`@prefixeDb@api_tab_menu_rangs_droit`
 --
 INSERT INTO `@dbLog@`.`@prefixeDb@api_tab_menu_rangs_droit` (`id`, `id_rang`, `id_menu`) VALUES
-(1, 1, ';1;2;3;4;5;6;7;'),
+(1, 1, ';0;1;2;3;4;5;6;7;'),
 (2, 10, ';1;2;3;7;'),
 (3, 20, ';1;2;3;7;'),
 (4, 30, ';1;2;3;7;'),

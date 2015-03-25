@@ -1,3 +1,11 @@
-{
-    "name": "Fabrice"
-}
+[
+    {
+        "groupName" : "main"
+        , "fr" : {
+            "btMenu" : "Le menu" 
+        }
+        , "en" : {
+            "btMenu" : "The menu"
+        }
+    }
+]

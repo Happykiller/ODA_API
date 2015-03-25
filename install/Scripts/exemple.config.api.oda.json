@@ -42,7 +42,8 @@
         {"nom":"test.php","chemin":"test/"},
         {"nom":"php.js","chemin":"test/resources/"},
         {"nom":"test.js","chemin":"test/resources/"},
-        {"nom":"favicon.png","chemin":"img/"}
+        {"nom":"favicon.png","chemin":"img/"},
+        {"nom":"i8n.json","chemin":"json/"}
     ]
     ,
     "Description":{

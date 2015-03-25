@@ -32,7 +32,9 @@ function WorkerMessage(cmd, parameter) {
     //Execute en 2
     $(document).ready(function() {
         try {
+            _trace("document.ready");
             _documentReady = true;
+            _allReadyAndLoad();
         } catch (er) {
             $.functionsLib.log(0, "ERROR(document.ready):" + er.message);
         }
@@ -42,7 +44,9 @@ function WorkerMessage(cmd, parameter) {
     //Execute en 3
     $(window).load(function() {
         try {
-            _documentLoad = true;
+            _trace("window.load");
+            _windowLoad = true;
+            _allReadyAndLoad();
         } catch (er) {
             $.functionsLib.log(0, "ERROR(window.load):" + er.message);
         }
@@ -81,11 +85,15 @@ function WorkerMessage(cmd, parameter) {
         
         _dependeciesFeedback = null,
         
-        _i8n = null,
+        _i8n = [],
         
         _documentReady = false,
         
-        _documentLoad = false,
+        _windowLoad = false,
+        
+        _odaInit = false,
+        
+        _debug = false,
         
         //-----------------
         //$.functionsMobile
@@ -147,27 +155,26 @@ function WorkerMessage(cmd, parameter) {
      * @desc Hello
      */
     function _init() {
+        //for testU
         if(typeof customWindowODA != 'undefined'){
             $.functionsLib.currentWindow = customWindowODA;
         }
         
-        _checkMaintenance();
-        _checkAuthentification();
-        
-        //-----------------
-        //$.functionsStorage
-        //-----------------
-        //Pour localstorage
-        _startRobot();
-        
-        //-----------------
-        //$.functionsMobile
-        //-----------------
-        document.addEventListener("deviceready", _onDeviceReady, false);
-        
+        //depdends
         $.functionsLib.loadDepends([
-                {"name" : "datas" , ordered : true, "list" : [{ "elt" : "api/json/i8n.json", "type" : "json", "target" :  _i8n}]}
-            ],_loaded);
+            {"name" : "lib" , ordered : true, "list" : [
+                { "elt" : "include/config.js", "type" : "script" }
+                , { "elt" : "js/fonctions.js", "type" : "script" }
+            ]}
+            , {"name" : "style" , ordered : false, "list" : [
+                , { "elt" : "API/css/mycss.css", "type" : "css" }
+                , { "elt" : "css/mycss.css", "type" : "css" }
+            ]}
+            , {"name" : "datas" , ordered : false, "list" : [
+                { "elt" : "API/json/i8n.json", "type" : "json", "target" : function(p_json){_i8n = _i8n.concat(p_json);}}
+                , { "elt" : "json/i8n.json", "type" : "json", "target" : function(p_json){_i8n = _i8n.concat(p_json);}}
+            ]}
+        ],_loaded);
     };
     
     /**
@@ -178,6 +185,19 @@ function WorkerMessage(cmd, parameter) {
         if (!document.querySelector || !document.addEventListener) {
             $.functionsLib.notification("Pour profiter d'une expérience optimum, merci d'utiliser un navigateur récent.", $.functionsLib.oda_msg_color.WARNING);
         }
+        
+        //mobile
+        document.addEventListener("deviceready", _onDeviceReady, false);
+        
+        //Pour localstorage
+        $.functionsStorage.storageKey = "ODA__"+domaine+"__";
+        _startRobot();
+        
+        //maintenance
+        _checkMaintenance();
+        
+        //secu
+        _checkAuthentification();
 
         //Themitisation
         var theme = $.functionsLib.getParameter("theme_defaut");
@@ -213,25 +233,18 @@ function WorkerMessage(cmd, parameter) {
         }
         
         //Ajoute titre page
-        if (( typeof id_page != "undefined" ) && (id_page != 0)) {
-            var description = $.functionsLib.getter("api_tab_menu",'{"champ":"Description","type":"PARAM_STR"}','{"champ":"id","valeur":"'+id_page+'","type":"PARAM_INT"}');
-
-            document.title = $.functionsLib.getParameter("nom_site") + " - " + description;
-
-            $("#id_titre").text(description);
-        }else{
-            document.title = $.functionsLib.getParameter("nom_site") + " - " + document.title;
-        }
+        var description = $.functionsLib.getter("api_tab_menu",'{"champ":"Description","type":"PARAM_STR"}','{"champ":"id","valeur":"'+id_page+'","type":"PARAM_INT"}');
+        document.title = $.functionsLib.getParameter("nom_site") + " - " + description;
+        $("#id_titre").text(description);
+        
 
         if($.functionsLib.pageName == "page_home.html"){
             _messagesShow();
         }
         
-        if(_documentLoad){
-            $.functionsLib.ready();
-        }else{
-            window.addEventListener("load", $.functionsLib.ready, false);
-        }
+        _trace("odaInit");
+        _odaInit = true;
+        _allReadyAndLoad();
     };
     
     /**
@@ -242,9 +255,9 @@ function WorkerMessage(cmd, parameter) {
     function _notification_fin(p_div) {
        try {
            $( "#"+p_div ).remove();
-       } catch (er) {
+        } catch (er) {
            $.functionsLib.log(0, "ERROR(_notification_fin):" + er.message);
-       }
+        }
     };
     
     /**
@@ -361,6 +374,7 @@ function WorkerMessage(cmd, parameter) {
                         return true;
                     }else{
                         _userInfo = _getUserInfo(session.code_user);
+                        _userInfo.locale = "fr";
 
                         if(_userInfo == null){
                             $.functionsLib.logout();
@@ -537,6 +551,16 @@ function WorkerMessage(cmd, parameter) {
         }
     }
     
+    function _allReadyAndLoad(){
+        try {
+            if(_documentReady && _windowLoad && _odaInit){
+                $.functionsLib.ready();
+            }
+        } catch (er) {
+            $.functionsLib.log(0, "ERROR(_allReadyAndLoad):" + er.message);
+        }
+    }
+    
     /**
     * @name getGPSPosition
     * @desc getGPSPosition
@@ -599,6 +623,12 @@ function WorkerMessage(cmd, parameter) {
         }
     };
     
+    function _trace(p_msg) {
+        if(_debug){
+            console.log(p_msg);
+        }
+    };
+    
     function _terminateRobot() {
         _etatRobot = false;
     };
@@ -613,7 +643,7 @@ function WorkerMessage(cmd, parameter) {
         try {
             var retour = true;
 
-            console.log("Loading : "+p_elt.elt);
+            _trace("Loading : "+p_elt.elt);
             
             switch(p_elt.type) {
                 case "css":
@@ -623,7 +653,7 @@ function WorkerMessage(cmd, parameter) {
                         href: p_elt.elt
                     }).appendTo('head');
                     p_elt.status = "done";
-                    console.log( "Sucess for : "+lib );
+                    _trace( "Sucess for : "+p_elt.elt );
                     
                     if(p_mode == "serie"){
                         _loadListDependsOrdoned();
@@ -636,7 +666,7 @@ function WorkerMessage(cmd, parameter) {
                     dataType: "script",
                     context : {"lib" : p_elt.elt},
                     success: function( script, textStatus, jqxhr) {
-                        console.log( "Sucess for : "+$(this)[0].lib+" ("+textStatus+")" );
+                        _trace( "Sucess for : "+$(this)[0].lib+" ("+textStatus+")" );
                         p_elt.status = "done";
                     
                         if(p_mode == "serie"){
@@ -645,7 +675,7 @@ function WorkerMessage(cmd, parameter) {
                         _allDependsLoaded();
                     },
                     error : function( jqxhr, settings, exception ) {
-                        console.log( "Triggered ajaxError handler for : "+$(this)[0].lib+"." );
+                        _trace( "Triggered ajaxError handler for : "+$(this)[0].lib+"." );
                         p_elt.status = "fail";
                     
                         if(p_mode == "serie"){
@@ -660,8 +690,9 @@ function WorkerMessage(cmd, parameter) {
                     dataType: "json",
                     url: p_elt.elt,
                     context : {"lib" : p_elt.elt},
-                    success: function( script, textStatus, jqxhr) {
-                        console.log( "Sucess for : "+$(this)[0].lib+" ("+textStatus+")" );
+                    success: function( json, textStatus, jqxhr) {
+                        p_elt.target(json);
+                        _trace( "Sucess for : "+$(this)[0].lib+" ("+textStatus+")" );
                         p_elt.status = "done";
                         
                         if(p_mode == "serie"){
@@ -670,7 +701,7 @@ function WorkerMessage(cmd, parameter) {
                         _allDependsLoaded();
                     },
                     error : function( jqxhr, settings, exception ) {
-                        console.log( "Triggered ajaxError handler for : "+$(this)[0].lib+"." );
+                        _trace( "Triggered ajaxError handler for : "+$(this)[0].lib+"." );
                         p_elt.status = "fail";
                         
                         if(p_mode == "serie"){
@@ -681,7 +712,7 @@ function WorkerMessage(cmd, parameter) {
                     });
                     break;
                 default:
-                    console.log( "Type unknown for : "+p_elt.elt+"." );
+                    _trace( "Type unknown for : "+p_elt.elt+"." );
             }
 
             return retour;
@@ -996,7 +1027,7 @@ function WorkerMessage(cmd, parameter) {
         */
         log : function(p_type, p_msg) {
            try {
-               console.log(p_msg);
+               _trace(p_msg);
                this.notification(p_msg,this.oda_msg_color.ERROR);
                var tabSetting = { };
                var tabInput = { 
@@ -1147,19 +1178,19 @@ function WorkerMessage(cmd, parameter) {
         */
         sendMail : function(p_params) {
            try {
-               var params_attempt = {
-                    email_mails_dest : null
-                    , message_html : null
-                    , sujet : null
-                };
-                
+                var params_attempt = {
+                     email_mails_dest : null
+                     , message_html : null
+                     , sujet : null
+                 };
+
                 var params = _checkParams(p_params, params_attempt);
                 if(params == null){
                     return false;
                 }
 
                 var returns = this.callRest(domaine+"API/scriptphp/send_mail.php", {type : 'POST'}, params);
-               
+
                 return returns;
            } catch (er) {
                this.log(0, "ERROR($.functionsLib.sendMail) :" + er.message);
@@ -1175,28 +1206,28 @@ function WorkerMessage(cmd, parameter) {
         */
         getParameter : function(p_param_name) {
            try {
-               var strResponse;
+                var strResponse;
 
-               var tabInput = { param_name : p_param_name };
-               var json_retour = this.callRest(domaine+"API/phpsql/getParam.php", {type : 'POST'}, tabInput);   
-               if(json_retour["strErreur"] == ""){
-                   var type = json_retour["data"]["leParametre"]["param_type"];
-                   var value = json_retour["data"]["leParametre"]["param_value"];
-                   switch (type) {
-                       case "int":
-                           strResponse = parseInt(value);
-                           break;
-                       case "float":
-                           strResponse = this.arrondir(parseFloat(value),2);
-                           break;
-                       case "varchar":
-                           strResponse =  value;
-                           break;
-                       default:
-                           strResponse =  value;
-                           break;
-                   }
-               } 
+                var tabInput = { param_name : p_param_name };
+                var json_retour = this.callRest(domaine+"API/phpsql/getParam.php", {type : 'POST'}, tabInput);   
+                if(json_retour["strErreur"] == ""){
+                    var type = json_retour["data"]["leParametre"]["param_type"];
+                    var value = json_retour["data"]["leParametre"]["param_value"];
+                    switch (type) {
+                        case "int":
+                            strResponse = parseInt(value);
+                            break;
+                        case "float":
+                            strResponse = this.arrondir(parseFloat(value),2);
+                            break;
+                        case "varchar":
+                            strResponse =  value;
+                            break;
+                        default:
+                            strResponse =  value;
+                            break;
+                    }
+                } 
 
                return strResponse;
            } catch (er) {
@@ -1249,25 +1280,25 @@ function WorkerMessage(cmd, parameter) {
         * @returns {String}
         */
         getParamGet : function(name) {
-           try {
-               var strUrl = this.currentWindow.location.href;
-               strUrl = decodeURIComponent(strUrl);
-               var start = strUrl.indexOf("?" + name + "=");
-               if (start < 0) start = strUrl.indexOf("&" + name + "=");
-               if (start < 0) return null;
-               start += name.length + 2;
-               var end = strUrl.indexOf("&", start) - 1;
-               if (end < 0) end = strUrl.length;
-               var result = '';
-               for (var i = start; i <= end; i++) {
-                   var c = strUrl.charAt(i);
-                   result = result + (c == '+' ? ' ' : c);
-               }
-               return unescape(result);
-           } catch (er) {
-               this.log(0, "ERROR($.functionsLib.getParamGet):" + er.message);
-               return null;
-           }
+            try {
+                var strUrl = this.currentWindow.location.href;
+                strUrl = decodeURIComponent(strUrl);
+                var start = strUrl.indexOf("?" + name + "=");
+                if (start < 0) start = strUrl.indexOf("&" + name + "=");
+                if (start < 0) return null;
+                start += name.length + 2;
+                var end = strUrl.indexOf("&", start) - 1;
+                if (end < 0) end = strUrl.length;
+                var result = '';
+                for (var i = start; i <= end; i++) {
+                    var c = strUrl.charAt(i);
+                    result = result + (c == '+' ? ' ' : c);
+                }
+                return unescape(result);
+            } catch (er) {
+                this.log(0, "ERROR($.functionsLib.getParamGet):" + er.message);
+                return null;
+            }
         },
         
         /**
@@ -1320,6 +1351,34 @@ function WorkerMessage(cmd, parameter) {
                this.log(0, "ERROR($.functionsLib.get_cookie):" + er.message);
                return null;
            }
+        },
+        
+        /**
+         * @name getI8n
+         * @param {string} p_group
+         * @param {string} p_tag
+         * @returns {String}
+        */
+        getI8n: function(p_group, p_tag) {
+            try {
+                var returnvalue = "Not define";
+                
+                for (var grpId in _i8n) {
+                    var grp = _i8n[grpId];
+                    if(grp.groupName == p_group){
+                        var trad = grp[_userInfo.locale][p_tag];
+                        if(!$.functionsLib.isUndefined(trad)){
+                            returnvalue = trad;
+                        }
+                        break;
+                    }
+                }
+
+                return returnvalue;
+            } catch (er) {
+                this.log(0, "ERROR($.functionsLib.getI8n):" + er.message);
+                return null;
+            }
         },
         
         /**
@@ -1445,7 +1504,7 @@ function WorkerMessage(cmd, parameter) {
         /**
         * @name displayCaptcha
         * @param {object} p_params
-        * @ex : $.functionsLib.displayCaptcha({'div':'divCatchar', 'functionRetour':function(data){console.log(data);}});
+        * @ex : $.functionsLib.displayCaptcha({'div':'divCatchar', 'functionRetour':function(data){_trace(data);}});
         * @returns {String|Array}
         */
         displayCaptcha : function(p_params) {
@@ -1850,7 +1909,7 @@ function WorkerMessage(cmd, parameter) {
 
                 for (var indice in _dependecies) {
                     if((this.isUndefined(_dependecies[indice].status)) || (_dependecies[indice].status != "done")){
-                        console.log("Loading list of dependecies : "+_dependecies[indice].name+".");
+                        _trace("Loading list of dependecies : "+_dependecies[indice].name+".");
                         _dependecies[indice].status = "doing";
                         if(_dependecies[indice].ordered){
                             _loadListDependsOrdoned();
@@ -2005,7 +2064,7 @@ function WorkerMessage(cmd, parameter) {
             
             source.addEventListener('time', function(e) {
                 var data = JSON.parse(e.data);
-                console.log('Server is now ' + data.time);
+                _trace('Server is now ' + data.time);
               }, false);
             
             return true;
@@ -2307,7 +2366,7 @@ function WorkerMessage(cmd, parameter) {
     $.functionsStorage = {
         /* Version number */
         version : VERSION,
-        storageKey : "ODA__"+domaine+"__",
+        storageKey : "",
 
         /**
          * 
