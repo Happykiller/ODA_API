@@ -467,7 +467,7 @@ function WorkerMessage(cmd, parameter) {
                         }
                         if(cate != "99"){
                             if(datas[indice]["selected"] == "1"){
-                                strHTML += "<li data-mini=\"true\" data-theme=\"b\" data-mini=\"true\"><a href=\"javascript:window.location = ('"+datas[indice]["Lien"]+"?mili="+$.functionsLib.getMilise()+"');\">"+datas[indice]["Description_courte"]+"</a></li>";
+                                strHTML += "<li data-mini=\"true\" data-theme=\"b\"><a href=\"javascript:window.location = ('"+datas[indice]["Lien"]+"?mili="+$.functionsLib.getMilise()+"');\">"+datas[indice]["Description_courte"]+"</a></li>";
                             }else{
                                 strHTML += "<li data-mini=\"true\"><a href=\"javascript:window.location = ('"+datas[indice]["Lien"]+"?mili="+$.functionsLib.getMilise()+"');\">"+datas[indice]["Description_courte"]+"</a></li>";
                             }
@@ -2445,6 +2445,11 @@ function WorkerMessage(cmd, parameter) {
                     }
 
                     if((myValue == null)&&(typeof(p_default) != 'undefined')){
+                        this.set(p_key, p_default);
+                        myValue = p_default;
+                    }
+                }else{
+                    if(typeof(p_default) != 'undefined'){
                         this.set(p_key, p_default);
                         myValue = p_default;
                     }
