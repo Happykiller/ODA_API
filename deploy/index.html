@@ -29,6 +29,7 @@
     //Fin chargement page
     $.functionsLib.ready = function(){
         try {
+            $( "#content_log" ).collapsible( "disable" );
             chargerSiteLabel();
         } catch (er) {
             $.functionsLib.log(0, "ERROR(OnLoad):" + er.message);

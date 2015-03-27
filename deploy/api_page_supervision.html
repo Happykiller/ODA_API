@@ -31,11 +31,11 @@
     //Fin chargement page
     $.functionsLib.ready = function(){
         try {
+            $( "#main_content" ).collapsible( "disable" );
             chargerMetricsInterface();
             chargerMaintenance(false);
-        }
-        catch (er) {
-            $.functionsLib.log(0, "ERROR(OnLoad):" + er.message);
+        } catch (er) {
+            $.functionsLib.log(0, "ERROR(ready):" + er.message);
         }
     };
 

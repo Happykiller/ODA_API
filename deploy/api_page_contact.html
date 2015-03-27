@@ -29,12 +29,13 @@
     //Fin chargement page
     $.functionsLib.ready = function(){
         try {
+            $( "#main_content" ).collapsible( "disable" );
             var contact_mail_administrateur = $.functionsLib.getParameter("contact_mail_administrateur");
             var nom_site = $.functionsLib.getParameter("nom_site");
             var shtml = '<a href="mailto:'+contact_mail_administrateur+'?subject=[ODA-'+nom_site+']Contact - '+$.functionsLib.getUserInfo().code_user+'">Administrateur</a>.';
             $("#emailAdmin").html(shtml).trigger("create");
         } catch (er) {
-            $.functionsLib.log(0, "ERROR(OnLoad):" + er.message);
+            $.functionsLib.log(0, "ERROR(ready):" + er.message);
         }
     };
 

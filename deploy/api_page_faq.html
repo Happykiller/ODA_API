@@ -29,6 +29,7 @@
     //Fin chargement page
     $.functionsLib.ready = function(){
         try {
+            $( "#main_content" ).collapsible( "disable" );
             // Init page
             var html = $.functionsLib.afficheAideIhm('');
             $("#main_content").append(html).trigger('create');

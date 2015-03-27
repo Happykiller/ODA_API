@@ -24,9 +24,9 @@
     //Fin chargement page
     $.functionsLib.ready = function(){
         try {
-            //
+            $( "#main_content" ).collapsible( "disable" );
         } catch (er) {
-            log(0, "ERROR(OnLoad):" + er.message);
+            $.functionsLib.log(0, "ERROR(ready):" + er.message);
         }
     };
 
