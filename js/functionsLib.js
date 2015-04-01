@@ -203,6 +203,12 @@ function WorkerMessage(cmd, parameter) {
         var theme = $.functionsLib.getParameter("theme_defaut");
 
         if((!$.functionsLib.isInArray($.functionsLib.pageName,_oda_notAuthTest))&&(_userInfo != null)){
+            //Ajoute titre page
+            var description = $.functionsLib.getter("api_tab_menu",'{"champ":"Description","type":"PARAM_STR"}','{"champ":"id","valeur":"'+id_page+'","type":"PARAM_INT"}');
+            document.title = $.functionsLib.getParameter("nom_site") + " - " + description;
+            $("#id_titre").text(description);
+            
+            //Thematisation
             var themePerso = $.functionsLib.getter("api_tab_utilisateurs",'{"champ":"theme","type":"PARAM_STR"}','{"champ":"code_user","valeur":"'+_userInfo.code_user+'","type":"PARAM_STR"}');
 
             if((typeof themePerso != 'undefined')&&(themePerso != '')&&(themePerso != 'notAvailable')&&(themePerso != null)&&(themePerso != "default")){
@@ -231,11 +237,6 @@ function WorkerMessage(cmd, parameter) {
                 $('head').append('<link rel="stylesheet" href="css/themes/'+theme+'/jquery.mobile.icons.min.css" />');
             }
         }
-        
-        //Ajoute titre page
-        var description = $.functionsLib.getter("api_tab_menu",'{"champ":"Description","type":"PARAM_STR"}','{"champ":"id","valeur":"'+id_page+'","type":"PARAM_INT"}');
-        document.title = $.functionsLib.getParameter("nom_site") + " - " + description;
-        $("#id_titre").text(description);
         
 
         if($.functionsLib.pageName == "page_home.html"){
