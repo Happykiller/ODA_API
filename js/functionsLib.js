@@ -1432,6 +1432,34 @@ function WorkerMessage(cmd, parameter) {
         },
         
         /**
+         * geRangs
+         * @returns {json}
+         */
+        geRangs :  function() {
+            try {
+                var valeur = $.functionsStorage.get("ODA_rangs");
+                if(valeur == null){
+                
+                    var tabInput = { "sql" : "Select `labelle`,`indice` FROM `api_tab_rangs` ORDER BY `indice` desc" };
+                    var json_retour = this.callRest(domaine+"API/phpsql/getSQL.php", {type : 'POST'}, tabInput);
+
+                    if(json_retour["strErreur"] == ""){
+                        valeur = json_retour.data.resultat.data;
+                    }else{
+                        this.notification(json_retour["strErreur"],this.oda_msg_color.ERROR);
+                    }
+                
+                    $.functionsStorage.set("ODA_rangs",valeur,$.functionsStorage.ttl_default);
+                }
+
+                return valeur;
+            } catch (er) {
+              this.log(0, "ERROR($.functionsLib.geRangs):" + er.message);
+              return null;
+            }
+        },
+        
+        /**
         * @name getSQL
         * @param {String} p_sql
         * @returns {Array}
@@ -2367,6 +2395,7 @@ function WorkerMessage(cmd, parameter) {
     $.functionsStorage = {
         /* Version number */
         version : VERSION,
+        ttl_default : 86400, //24H
         storageKey : "",
 
         /**

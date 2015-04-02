@@ -10,3 +10,14 @@
 .default {
     color : #333333;
 }
+.dataTable_right{
+  text-align: right;
+}
+
+.dataTable_left{
+  text-align: left;
+}
+
+.dataTable_center{
+  text-align: center;
+}
