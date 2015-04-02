@@ -232,7 +232,7 @@ class OdaLib {
         try {
             $strRetour = "ok";
             
-            if (ini_get("SMTP") == "localhost") {
+            if (ini_get("SMTP") == "none") {
                 $strRetour = "ko: smtp in localhost";
                 goto gotoFinish;
             }
