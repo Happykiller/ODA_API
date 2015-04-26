@@ -17,7 +17,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 //--------------------------------------------------------------------------
 $params = new OdaPrepareReqSql();
 $params->sql = "SELECT a.`id`, a.`nom`, a.`prenom`, a.`code_user`, a.`password`, a.`mail`
-    FROM `".$prefixTable."api_tab_utilisateurs` a
+    FROM `api_tab_utilisateurs` a
     WHERE 1=1
     AND a.`actif` = 1
     AND (
