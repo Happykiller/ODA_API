@@ -1,6 +1,6 @@
 # ODA_API
 
-Composer (For use the php class)
+Composer (For use the php class, WEB REST feature)
 https://packagist.org/packages/happykiller/oda_api
 
 Ex file.php
@@ -9,12 +9,11 @@ Ex file.php
  * CONFIG PART
  */
 $config = \Oda\SimpleObject\OdaConfig::getInstance();
-$config->domaine = "http://localhost/ODA_SANDBOX/";
+$config->domaine = "http://localhost/project/";
 
 //for bd engine
-$config->BD_ENGINE->base = 'how';
+$config->BD_ENGINE->base = 'base';
 $config->BD_ENGINE->mdp = 'pass';
-$config->BD_ENGINE->prefixTable = 'how-';
 
 /**
  * BUILD INTERFACE
