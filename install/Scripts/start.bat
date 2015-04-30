@@ -1,1 +1,0 @@
-python script_ODA_API.py install ../../../../exemple.config.api.oda.json install
