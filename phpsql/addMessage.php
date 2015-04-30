@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/addMessage";
 $params->arrayInput = array("message","niveau","profile","date_expiration","code_user");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -15,7 +15,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // addMessage.php?milis=123450&ctrl=ok&message=Hello&niveau=ALERT&profile=30&date_expiration=2014-01-26&code_user=FRO
     
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "INSERT INTO `api_tab_messages`
     (`actif`, `message`, `profile`, `niveau`, `date_expiration`, `code_user_creation`, `date_creation`) 
     VALUES 

@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/setParam";
 $params->arrayInput = array("param_name","param_value");
 $ODA_INTERFACE = new OdaLibInterface($params);

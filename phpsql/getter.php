@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/getter";
 $params->arrayInput = array("table","get","filtre");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -40,7 +40,7 @@ $strSql = "SELECT ".$strGet." as 'champ', '".$typeGet."' as 'type'
 ";
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = $strSql;
 $params->typeSQL = OdaLibBd::SQL_GET_ONE;
 $retour = $ODA_INTERFACE->BD_ENGINE->reqODASQL($params);

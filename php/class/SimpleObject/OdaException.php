@@ -1,5 +1,5 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
 class OdaException extends \Exception { 
     protected $_params;
     protected $_class;

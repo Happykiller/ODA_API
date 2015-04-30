@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/getRecupUtilisateur";
 $params->arrayInput = array("identifiant","email");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -15,7 +15,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/getRecupUtilisateur.php?milis=123456789&email=fabrice.rosito@cgi.com&identifiant=codeUtilis
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "SELECT a.`id`, a.`nom`, a.`prenom`, a.`code_user`, a.`password`, a.`mail`
     FROM `api_tab_utilisateurs` a
     WHERE 1=1

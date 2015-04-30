@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "phpsql/getAuthInfo";
 $params->arrayInput = array("code_user", "profile");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -15,7 +15,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/getDetailsUser.php?milis=123450&profile=1&code_user=VIS
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "Select *
     FROM `api_tab_utilisateurs` a
     WHERE 1=1
@@ -32,7 +32,7 @@ $params->retourSql = $retour;
 $ODA_INTERFACE->addDataReqSQL($params);
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "Select *
     FROM `api_tab_rangs` a
     WHERE 1=1

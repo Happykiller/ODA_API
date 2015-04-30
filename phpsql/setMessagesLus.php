@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/setMessagesLus";
 $params->arrayInput = array("code_user");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -15,7 +15,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/setMessagesLus.php?milis=123450&ctrl=ok&code_user=VIS
     
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "INSERT INTO `api_tab_messages_lus`(`code_user`, `id_message`, `datelu`)
     Select '".$ODA_INTERFACE->inputs["code_user"]."', a.`id` , NOW()
     FROM `api_tab_messages` a

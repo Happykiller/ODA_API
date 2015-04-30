@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/setter";
 $params->arrayInput = array("table","set","filtre");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -45,7 +45,7 @@ $strSql = "UPDATE `".$ODA_INTERFACE->inputs["table"]."` a
 ";
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = $strSql;
 $params->typeSQL = OdaLibBd::SQL_SCRIPT;
 $retour = $ODA_INTERFACE->BD_ENGINE->reqODASQL($params);

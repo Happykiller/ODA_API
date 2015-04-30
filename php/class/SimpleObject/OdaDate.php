@@ -1,5 +1,5 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
 /* 
  * Class OdaDate
  * ex : 

@@ -1,5 +1,5 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
 class OdaPrepareReqSql {
     /**
      * The sql query
@@ -15,7 +15,7 @@ class OdaPrepareReqSql {
      * Type of req, OdaLibBd::SQL_SCRIPT by default
      * @var int 
      */
-    public $typeSQL = OdaLibBd::SQL_SCRIPT;
+    public $typeSQL = \Oda\OdaLibBd::SQL_SCRIPT;
     /**
      * PDO::FETCH_CLASS value
      * 

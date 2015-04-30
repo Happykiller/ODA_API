@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->arrayInput = array("code_user", "key");
 $ODA_INTERFACE = new OdaLibInterface($params);
 

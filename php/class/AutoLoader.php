@@ -20,12 +20,7 @@ class AutoLoader{
         if(strpos($class, __NAMESPACE__ . "\\") === 0){
             $class = str_replace(__NAMESPACE__ . "\\", '', $class);
             $file_base = dirname(__FILE__).$sep.$class.'.php';
-            $file_simpleObject = dirname(__FILE__).$sep.'SimpleObject'.$sep.$class.'.php';
-            if(file_exists($file_base)){
-                require_once $file_base;
-            }else{
-                require_once $file_simpleObject;
-            }
+            require_once $file_base;
         }
     }
     

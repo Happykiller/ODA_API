@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/maintenanceDb";
 $params->arrayInput = array("exec");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -15,7 +15,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/maintenanceDb.php?milis=123450&exec=false
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "SELECT 'api_tab_session' as 'table', COUNT(*) as 'nb'
 FROM `api_tab_session`
 UNION
@@ -55,7 +55,7 @@ if($ODA_INTERFACE->inputs["exec"] == "true"){
     if($nb_api_tab_session > 1000){
         $obj_purge->statut = "init";
 
-        $params = new OdaPrepareReqSql();
+        $params = new SimpleObject\OdaPrepareReqSql();
         $params->sql = "DELETE
             FROM `api_tab_session`
             WHERE 1=1
@@ -79,7 +79,7 @@ if($ODA_INTERFACE->inputs["exec"] == "true"){
     if($nb_api_tab_transaction > 1000){
         $obj_purge->statut = "init";
 
-        $params = new OdaPrepareReqSql();
+        $params = new SimpleObject\OdaPrepareReqSql();
         $params->sql = "DELETE
             FROM `api_tab_transaction`
             WHERE 1=1
@@ -101,7 +101,7 @@ if($ODA_INTERFACE->inputs["exec"] == "true"){
     if($nb_api_tab_log > 1000){
         $obj_purge->statut = "init";
 
-        $params = new OdaPrepareReqSql();
+        $params = new SimpleObject\OdaPrepareReqSql();
         $params->sql = "DELETE
             FROM `api_tab_log`
             WHERE 1=1

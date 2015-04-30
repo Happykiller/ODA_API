@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/getMetricsInterface";
 $ODA_INTERFACE = new OdaLibInterface($params);
 
@@ -14,7 +14,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/getMetricsInterface.php?milis=123450&ctrl=ok
     
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "SELECT REPLACE(`type`,SUBSTRING_INDEX(`type`, '/', 4), '') as 'interface' 
     ,COUNT(`id`) as 'nb'
     ,COUNT(`id`) *  AVG(TIMEDIFF(`fin`,`debut`)) as 'cost'

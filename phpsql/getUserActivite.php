@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/getUserActivite";
 $ODA_INTERFACE = new OdaLibInterface($params);
 
@@ -14,7 +14,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/getUserActivite.php?milis=123456789&ctrl=ok
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "SELECT IF(a.`code_user`='','N.A',a.`code_user`) as 'code_user', count(*) 'nombre'
     FROM `api_tab_statistiques_site` a, `api_tab_utilisateurs` b
     WHERE 1=1

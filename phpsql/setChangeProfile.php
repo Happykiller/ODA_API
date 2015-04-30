@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/setChangeProfile";
 $params->arrayInput = array("code_user","mdp","champs","value");
 $ODA_INTERFACE = new OdaLibInterface($params);

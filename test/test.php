@@ -7,7 +7,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/test";
 $ODA_INTERFACE = new OdaLibInterface($params);
 
@@ -166,7 +166,7 @@ $retours[] = OdaLib::test("singleObjGet",function() {
 $retours[] = OdaLib::test("singleObjSet",function() {
         global $ODA_INTERFACE, $config;
         
-        $params = new OdaPrepareReqSql();
+        $params = new SimpleObject\OdaPrepareReqSql();
         $params->sql = "DELETE FROM `api_tab_parametres`
             WHERE 1=1
             AND `param_name` = 'varTestU'
@@ -188,7 +188,7 @@ $retours[] = OdaLib::test("singleObjSet",function() {
         $retour = $ODA_INTERFACE->BD_ENGINE->setSingleObj($params);
         OdaLib::equal(!is_null($retour), true, "Test OK (edit by set) : Passed! ('".$retour."' found)");
         
-        $params = new OdaPrepareReqSql();
+        $params = new SimpleObject\OdaPrepareReqSql();
         $params->sql = "DELETE FROM `api_tab_parametres`
             WHERE 1=1
             AND `param_name` = 'varTestU'

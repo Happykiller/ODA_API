@@ -1,5 +1,6 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
+
 class OdaPrepareInterface {
     /**
      * Mode debug, false by default

@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/addUtilisateur";
 $params->arrayInput = array("nom","prenom","email","motDePasse","codeUtilisateur");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -14,7 +14,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // addUtilisateur.php?milis=123450&nom=nom&prenom=prenom&email=email@mail.com&motDePasse=mdp&codeUtilisateur=NOP
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "select count(*) as result
     from `api_tab_utilisateurs`
     where 1=1
@@ -32,7 +32,7 @@ if($nbSamePseudo == 0){
 }
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "INSERT INTO `api_tab_utilisateurs` 
     (`login`,`password`,`code_user`,`nom`,`prenom`,`profile`,`montrer_aide_ihm`,`mail`,`actif`,`date_creation`,`date_modif`) 
     VALUES  
@@ -49,7 +49,7 @@ $params->typeSQL = OdaLibBd::SQL_INSERT_ONE;
 $retour = $ODA_INTERFACE->BD_ENGINE->reqODASQL($params);
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "select a.`id`,a.`code_user`,a.`mail`
     FROM `api_tab_utilisateurs` a
     WHERE 1=1

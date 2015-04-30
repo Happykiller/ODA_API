@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/insertLog";
 $params->arrayInput = array("type","msg");
 $ODA_INTERFACE = new OdaLibInterface($params);

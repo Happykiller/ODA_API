@@ -1,11 +1,11 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
 class OdaRetourReqSql {
     /**
      * The code statut
      * @var int 
      */
-    public $strStatut = OdaLibBd::SQL_STATUT_INIT;
+    public $strStatut = \Oda\OdaLibBd::SQL_STATUT_INIT;
     /**
      * If a error appear
      * @var string 

@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/getSQL";
 $params->modePublic = false;
 $params->arrayInput = array("sql");
@@ -31,7 +31,7 @@ if (preg_match("/\bUPDATE\b/i", $ODA_INTERFACE->inputs["sql"])) {
 $strSql = stripslashes($ODA_INTERFACE->inputs["sql"]);
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = $strSql;
 $params->typeSQL = OdaLibBd::SQL_GET_ALL;
 $retour = $ODA_INTERFACE->BD_ENGINE->reqODASQL($params);

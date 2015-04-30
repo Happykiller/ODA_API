@@ -58,17 +58,17 @@ class OdaLibBd {
      * @return OdaDate $this
      */
     public function __construct($p_params){
-        $params_attempt = new OdaPrepareBd();
+        $params_attempt = new SimpleObject\OdaPrepareBd();
         $params_attempt->modeDebug = $this->modeDebug;
         try {
             $params = (object) array_merge((array) $params_attempt, (array) $p_params);
             $this->modeDebug = $params->modeDebug;
-            if(!is_a($params->bd_conf, 'Oda\OdaConnection')){
+            if(!is_a($params->bd_conf, 'Oda\SimpleObject\OdaConnection')){
                 $params = new stdClass();
                 $params->class = __CLASS__;
                 $params->function = __FUNCTION__;
                 $params->message = "Conf is not a OdaConnection.";
-                throw new OdaException($params);
+                throw new SimpleObject\OdaException($params);
             }
             
             $params->bd_conf->isOk();
@@ -100,7 +100,7 @@ class OdaLibBd {
      * @access private
      * @return null
      */
-    private function buildConnection(OdaConnection $BD_CONF){
+    private function buildConnection(SimpleObject\OdaConnection $BD_CONF){
         try {
             if(is_null($BD_CONF->login)){
                 $BD_CONF->login = $BD_CONF->base;
@@ -118,7 +118,7 @@ class OdaLibBd {
                         $params->class = __CLASS__;
                         $params->function = __FUNCTION__;
                         $params->message = "Query test fail : ".$v_connection->errorInfo();
-                        throw new OdaException($params);
+                        throw new SimpleObject\OdaException($params);
                     }
                     break;
                 case "oracle":
@@ -141,7 +141,7 @@ class OdaLibBd {
                     $params->class = __CLASS__;
                     $params->function = __FUNCTION__;
                     $params->message = "Connection impossible ".$BD_CONF->type." is unknow.";
-                    throw new OdaException($params);
+                    throw new SimpleObject\OdaException($params);
             }
             
             $v_connection->exec("SET CHARACTER SET utf8");
@@ -155,10 +155,10 @@ class OdaLibBd {
      * 
      * @param \Oda\OdaPrepareReqSql $params
      * @return \Oda\OdaRetourReqSql
-     * @throws OdaException
+     * @throws SimpleObject\OdaException
      */
-    public function reqODASQL(OdaPrepareReqSql $params){
-        $objRetour = new OdaRetourReqSql();
+    public function reqODASQL(SimpleObject\OdaPrepareReqSql $params){
+        $objRetour = new SimpleObject\OdaRetourReqSql();
         try {
             if($this->modeDebug){
                 $params->debug = $this->modeDebug;
@@ -227,7 +227,7 @@ class OdaLibBd {
                             $paramsEx->message = "Erreur SQL ODA, more one return for SQL_GET_ONE";
                             $paramsEx->code = self::ERROR_SQL_TOO_MUCH_RECORD;
                             $paramsEx->debug = $params->debug;
-                            throw new OdaException($paramsEx);
+                            throw new SimpleObject\OdaException($paramsEx);
                         }else{
                             if(!empty($params->className)){
                                 $req->setFetchMode(PDO::FETCH_CLASS, $params->className);
@@ -244,7 +244,7 @@ class OdaLibBd {
                         $paramsEx->message = "Erreur SQL => ".$pdoError[2];
                         $paramsEx->code = self::ERROR_SQL_SYNTAX;
                         $paramsEx->debug = $params->debug;
-                        throw new OdaException($paramsEx);
+                        throw new SimpleObject\OdaException($paramsEx);
                     }
                     $req->closeCursor();
                     break;
@@ -268,7 +268,7 @@ class OdaLibBd {
                         $paramsEx->message = "Erreur SQL => ".$pdoError[2];
                         $paramsEx->code = self::ERROR_SQL_SYNTAX;
                         $paramsEx->debug = $params->debug;
-                        throw new OdaException($paramsEx);
+                        throw new SimpleObject\OdaException($paramsEx);
                     }
                     $req->closeCursor();
                     break;
@@ -284,7 +284,7 @@ class OdaLibBd {
                         $paramsEx->message = "Erreur SQL => ".$pdoError[2];
                         $paramsEx->code = self::ERROR_SQL_SYNTAX;
                         $paramsEx->debug = $params->debug;
-                        throw new OdaException($paramsEx);
+                        throw new SimpleObject\OdaException($paramsEx);
                     }
                     $req->closeCursor();
                     $objRetour->nombre = 1;
@@ -302,7 +302,7 @@ class OdaLibBd {
                         $paramsEx->message = "Erreur SQL => ".$pdoError[2];
                         $paramsEx->code = self::ERROR_SQL_SYNTAX;
                         $paramsEx->debug = $params->debug;
-                        throw new OdaException($paramsEx);
+                        throw new SimpleObject\OdaException($paramsEx);
                     }
                     $req->closeCursor();
                     $objRetour->nombre = $count;
@@ -320,10 +320,10 @@ class OdaLibBd {
             }
             
             return $objRetour;
-        } catch (OdaException $e) {
+        } catch (SimpleObject\OdaException $e) {
             $params = $e->getParams();
             if(($params->debug)||($this->modeDebug)){
-                echo('OdaException : ');
+                echo('SimpleObject\OdaException : ');
                 var_dump($params);
             }
             $objRetour->statutCode = 4;
@@ -462,7 +462,7 @@ class OdaLibBd {
                 $bindsValue[$key] = [ "value" => $value];
             }
 
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = $strSql;
             $params->bindsValue = $bindsValue;
             $params->typeSQL = self::SQL_GET_ONE;
@@ -521,7 +521,7 @@ class OdaLibBd {
 
                 $strSql = substr($strSql, 0, -1);
                 
-                $params = new OdaPrepareReqSql();
+                $params = new SimpleObject\OdaPrepareReqSql();
                 $params->sql = $strSql;
                 $params->bindsValue = $bindsValue;
                 $params->typeSQL = self::SQL_SCRIPT;
@@ -566,7 +566,7 @@ class OdaLibBd {
 
                 $strSql .= ")";
 
-                $params = new OdaPrepareReqSql();
+                $params = new SimpleObject\OdaPrepareReqSql();
                 $params->sql = $strSql;
                 $params->bindsValue = $bindsValue;
                 $params->typeSQL = self::SQL_INSERT_ONE;

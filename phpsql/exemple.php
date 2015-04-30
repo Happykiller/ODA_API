@@ -1,5 +1,7 @@
 <?php
 namespace Oda;
+use stdClass, \Oda\SimpleObject\OdaPrepareInterface, \Oda\SimpleObject\OdaPrepareReqSql, \Oda\OdaLibBd;
+
 //--------------------------------------------------------------------------
 //Header
 require("../php/header.php");
@@ -97,7 +99,7 @@ $ODA_INTERFACE->addDataStr($params);
 
 //--------------------------------------------------------------------------
 //EXEMPLE INSERT 1 DATA
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "INSERT INTO  `coucou` (
         `idElem` ,
         `nature` 

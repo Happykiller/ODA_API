@@ -101,16 +101,16 @@ class OdaLibInterface {
      * @param type \Oda\OdaPrepareInterface
      * @return \Oda\OdaLibInterface
      */
-    public function __construct(OdaPrepareInterface $params){
+    public function __construct(SimpleObject\OdaPrepareInterface $params){
         try {
             $this->params = $params;
             $this->modeDebug = $params->modeDebug;
             $this->modePublic = $params->modePublic;
             $this->modeSortie = $params->modeSortie;
             $this->fileName = $params->fileName;
-            $this->object_retour = new OdaRetourInterface();
+            $this->object_retour = new SimpleObject\OdaRetourInterface();
             
-            self::$config = OdaConfig::getInstance();
+            self::$config = SimpleObject\OdaConfig::getInstance();
             
             self::$config ->isOK();
             
@@ -159,10 +159,10 @@ class OdaLibInterface {
         }
         $strSorti = "";
         
-        $fin = new OdaDate();
+        $fin = new SimpleObject\OdaDate();
         $this->object_retour->metro["ODAEnd"] = $fin->getDateTimeWithMili();
         
-        $endMicro = OdaDate::getMicro();
+        $endMicro = SimpleObject\OdaDate::getMicro();
 
         $duree = $endMicro - $this->startMicro;
         $this->object_retour->metro["ODADuree"] = $duree;
@@ -292,7 +292,7 @@ class OdaLibInterface {
                 $params->class = __CLASS__;
                 $params->function = __FUNCTION__;
                 $params->message = "Field(s) missing : ".$strError.'ex : '.$this->getUrlTest();
-                throw new OdaException($params);
+                throw new SimpleObject\OdaException($params);
             }
             
             return $arrayOut; 
@@ -311,7 +311,7 @@ class OdaLibInterface {
             $tabName = explode("/",$SCRIPT_NAME);
             $SCRIPT_NAME = str_replace("/".$tabName[1]."/", "", $SCRIPT_NAME);
             
-            $strUrl = self::$config->domaine.$SCRIPT_NAME."?milis=". OdaDate::getMicro();
+            $strUrl = self::$config->domaine.$SCRIPT_NAME."?milis=". SimpleObject\OdaDate::getMicro();
             
             foreach ($this->inputs as $key => $value){
                 if(($key != 'keyAuthODA')&&($key != 'ODAFileName')&&($key != 'ODAFileType')){
@@ -422,11 +422,11 @@ class OdaLibInterface {
      */
     protected function _initTransaction () {
         try {
-            $debut = new OdaDate();
-            $this->startMicro = OdaDate::getMicro();
+            $debut = new SimpleObject\OdaDate();
+            $this->startMicro = SimpleObject\OdaDate::getMicro();
             $this->object_retour->metro["ODABegin"] = $debut->getDateTimeWithMili();
             
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = "INSERT INTO  `api_tab_transaction` (
                 `id` ,
                 `type` ,
@@ -460,7 +460,7 @@ class OdaLibInterface {
      */
     protected function _finishTransaction($p_strSorti, $fin){
         try {
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = "UPDATE `api_tab_transaction` 
                 SET `output` = :strSort
                     , `statut` = 'output'
@@ -492,7 +492,7 @@ class OdaLibInterface {
                     $this->object_retour->statut = self::STATE_ERROR;
                     die();
                 }else{
-                    $params = new OdaPrepareReqSql();
+                    $params = new SimpleObject\OdaPrepareReqSql();
                     $params->sql = "Select *
                         , IF(a.`periodeValideMinute` = 0, true, IF(((a.`dateCreation` + INTERVAL a.`periodeValideMinute` MINUTE) < NOW()), false, true)) as 'ajour'
                         from `api_tab_session` a
@@ -528,7 +528,7 @@ class OdaLibInterface {
      */
     public function checkSession($p_params){
         try {
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = "SELECT true as 'check'
                 FROM `api_tab_session` a
                 WHERE 1=1
@@ -556,7 +556,7 @@ class OdaLibInterface {
      */
     public function deleteSession($p_params){
         try {
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = "DELETE
                 FROM `api_tab_session`
                 WHERE 1=1
@@ -586,7 +586,7 @@ class OdaLibInterface {
             $v_key = "";
 
             //Detruit les veilles clés
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = "DELETE FROM `api_tab_session`
                 WHERE 1=1
                 AND `datas` like '%\"code_user\":\"".$v_code_user."\"%'
@@ -597,7 +597,7 @@ class OdaLibInterface {
             $retour = $this->BD_AUTH->reqODASQL($params);
             
             //Vérifie la présence d'une clé
-            $params = new OdaPrepareReqSql();
+            $params = new SimpleObject\OdaPrepareReqSql();
             $params->sql = "SELECT *
                 FROM `api_tab_session` a
                 WHERE 1=1
@@ -611,7 +611,7 @@ class OdaLibInterface {
                 $v_key = $retour->data->key;
             }else{
                 //Check log pass
-                $params = new OdaPrepareReqSql();
+                $params = new SimpleObject\OdaPrepareReqSql();
                 $params->sql = "SELECT *
                     FROM `api_tab_utilisateurs` a
                     WHERE 1=1
@@ -629,7 +629,7 @@ class OdaLibInterface {
                     $json->code_user = $v_code_user;
                     $json->date = $v_strDate;
 
-                    $params = new OdaPrepareReqSql();
+                    $params = new SimpleObject\OdaPrepareReqSql();
                     $params->sql = "INSERT INTO `api_tab_session`(
                             `id` ,
                             `key` ,

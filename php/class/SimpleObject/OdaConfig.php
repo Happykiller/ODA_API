@@ -1,5 +1,5 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
 /**
  * LIBODA Librairy - main class
  *

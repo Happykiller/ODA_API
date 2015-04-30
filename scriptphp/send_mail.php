@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/scriptphp/send_mail";
 $params->arrayInput = array("email_mails_dest","message_html", "sujet");
 $params->arrayInputOpt = array(

@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/scriptphp/uploadFile";
 $params->arrayInput = array("dossier","nom");
 $params->arrayInputOpt = array("replace" => true);

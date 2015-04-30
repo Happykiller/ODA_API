@@ -6,7 +6,7 @@ require("../../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/test_secu";
 $params->modePublic = false;
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -16,7 +16,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 
 //--------------------------------------------------------------------------
 //Pour test on récupère les paramètres de l'appli
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "SELECT * 
     FROM `api_tab_parametres` a
     WHERE 1=1

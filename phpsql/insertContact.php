@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/insertContact";
 $params->arrayInput = array("reponse","message","code_user");
 $ODA_INTERFACE = new OdaLibInterface($params);
@@ -15,7 +15,7 @@ $ODA_INTERFACE = new OdaLibInterface($params);
 // API/phpsql/insertContact.php?milis=123456789&reponse=moi@gma.com&message=Ecrit moi !&code_user=FRO
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = "INSERT INTO `api_tab_contact`
     (`date_enreg`,`reponse`,`message`,`code_user`) 
     VALUES  

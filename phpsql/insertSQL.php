@@ -6,7 +6,7 @@ require("../php/header.php");
 
 //--------------------------------------------------------------------------
 //Build the interface
-$params = new OdaPrepareInterface();
+$params = new SimpleObject\OdaPrepareInterface();
 $params->interface = "API/phpsql/insertSQL";
 $params->modePublic = false;
 $params->arrayInput = array("sql");
@@ -35,7 +35,7 @@ if (preg_match("/\bSELECT\b/i", $ODA_INTERFACE->inputs["sql"])) {
 $strSql = stripslashes($ODA_INTERFACE->inputs["sql"]);
 
 //--------------------------------------------------------------------------
-$params = new OdaPrepareReqSql();
+$params = new SimpleObject\OdaPrepareReqSql();
 $params->sql = $strSql;
 $params->typeSQL = OdaLibBd::SQL_INSERT_ONE;
 $retour = $ODA_INTERFACE->BD_ENGINE->reqODASQL($params);

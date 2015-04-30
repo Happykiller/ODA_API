@@ -1,5 +1,5 @@
 <?php
-namespace Oda;
+namespace Oda\SimpleObject;
 class OdaRetourInterface {
     /**
      *
@@ -15,7 +15,7 @@ class OdaRetourInterface {
      *
      * @var int 
      */
-    public $statut = OdaLibInterface::STATE_INIT;
+    public $statut = \Oda\OdaLibInterface::STATE_INIT;
     /**
      *
      * @var int 
