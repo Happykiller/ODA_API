@@ -1,9 +1,22 @@
 # ODA_API
 
-Composer (For use the php class, WEB REST feature)
+# Full project
+WEB client (Html, Jquery, Jquery Mobile) + REST API (Php)
+
+Install
+1- Get all the sources in ./yourProject/API/
+2- Create json conf (ex : in API/install/Scripts/exemple.config.api.oda.json)
+3- Run cmd (ex : python API/install/Scripts/script_ODA_API.py ../../../../exemple.config.api.oda.json install)
+4- Config (include/config.js and include/config.php)
+
+Update
+Run cmd (ex : python API/install/Scripts/script_ODA_API.py ../../../../exemple.config.api.oda.json update)
+
+# Composer 
+(For use the php class, WEB REST feature)
 https://packagist.org/packages/happykiller/oda_api
 
-Ex file.php
+Ex : file.php
 <pre>
 /**
  * CONFIG PART
