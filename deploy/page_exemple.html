@@ -40,14 +40,13 @@
      */
     $.functionsLib.ready = function(){
         try {
-            $( "#main_content" ).collapsible( "disable" );
             var myReturn = true;
             
             chargerExemple();
             
             return myReturn;
         } catch (er) {
-            $.functionsLib.log(0, "ERROR(OnLoad):" + er.message);
+            $.functionsLib.log(0, "ERROR($.functionsLib.ready):" + er.message);
             return null;
         }
     };
@@ -67,7 +66,7 @@
             
             $.functionsLib.notification("Merci de patienter ...", $.functionsLib.INFO);
             var tabSetting = { functionRetour : retourExemple};
-            var tabInput = { test : 'ok' };
+            var tabInput = { param_name : 'nom_site' };
             $.functionsLib.callRest(domaine+"phpsql/exemple.php", tabSetting, tabInput); 
             
             return myReturn;
